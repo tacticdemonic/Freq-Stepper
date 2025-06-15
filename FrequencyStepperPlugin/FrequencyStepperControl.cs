@@ -16,6 +16,7 @@ namespace FrequencyStepperPlugin
         private NumericUpDown _endFreqNumeric;
         private NumericUpDown _stepSizeNumeric;
         private NumericUpDown _stepIntervalNumeric;
+        private CheckBox _loopCheckBox;
         private Button _startButton;
         private Button _pauseButton;
         private Button _stopButton;
@@ -136,6 +137,16 @@ namespace FrequencyStepperPlugin
                 ForeColor = Color.White
             };
 
+            // Loop checkbox
+            _loopCheckBox = new CheckBox
+            {
+                Text = "Loop continuously",
+                ForeColor = Color.White,
+                AutoSize = true,
+                Checked = false,
+                Margin = new Padding(0, 10, 0, 10)
+            };
+
             // Control buttons
             _startButton = new Button
             {
@@ -199,6 +210,7 @@ namespace FrequencyStepperPlugin
             mainPanel.Controls.Add(_stepSizeNumeric);
             mainPanel.Controls.Add(stepIntervalLabel);
             mainPanel.Controls.Add(_stepIntervalNumeric);
+            mainPanel.Controls.Add(_loopCheckBox);
             mainPanel.Controls.Add(_startButton);
             mainPanel.Controls.Add(_pauseButton);
             mainPanel.Controls.Add(_stopButton);
@@ -258,7 +270,8 @@ namespace FrequencyStepperPlugin
                 StartFrequencyMHz = _startFreqNumeric.Value,
                 EndFrequencyMHz = _endFreqNumeric.Value,
                 StepSizeMHz = _stepSizeNumeric.Value,
-                StepIntervalMs = (int)_stepIntervalNumeric.Value
+                StepIntervalMs = (int)_stepIntervalNumeric.Value,
+                LoopContinuously = _loopCheckBox.Checked
             };
 
             _stepperLogic.Start(config);
@@ -385,6 +398,7 @@ namespace FrequencyStepperPlugin
             _endFreqNumeric.Enabled = enabled;
             _stepSizeNumeric.Enabled = enabled;
             _stepIntervalNumeric.Enabled = enabled;
+            _loopCheckBox.Enabled = enabled;
         }
 
         private void LoadSettings()
@@ -396,6 +410,7 @@ namespace FrequencyStepperPlugin
                 _endFreqNumeric.Value = settings.EndFrequencyMHz;
                 _stepSizeNumeric.Value = settings.StepSizeMHz;
                 _stepIntervalNumeric.Value = settings.StepIntervalMs;
+                _loopCheckBox.Checked = settings.LoopContinuously;
             }
         }
 
@@ -406,7 +421,8 @@ namespace FrequencyStepperPlugin
                 StartFrequencyMHz = _startFreqNumeric.Value,
                 EndFrequencyMHz = _endFreqNumeric.Value,
                 StepSizeMHz = _stepSizeNumeric.Value,
-                StepIntervalMs = (int)_stepIntervalNumeric.Value
+                StepIntervalMs = (int)_stepIntervalNumeric.Value,
+                LoopContinuously = _loopCheckBox.Checked
             };
             settings.Save();
         }

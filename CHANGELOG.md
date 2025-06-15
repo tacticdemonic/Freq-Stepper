@@ -12,6 +12,13 @@ All notable changes to the Frequency Stepper Plugin project will be documented i
   - Status messages show "Stepping paused" and "Stepping resumed" notifications
   - Proper button state management during start/pause/resume/stop operations
 
+- **Loop Continuously Feature**: Added checkbox to enable continuous looping
+  - When enabled, stepping automatically restarts from start frequency when end frequency is reached
+  - Loop setting is persisted between sessions with other settings
+  - Status message shows "Looping: Restarted at X.XXXXXX MHz" when loop occurs
+  - Loop checkbox is disabled during stepping to prevent changes mid-scan
+  - Allows for indefinite monitoring of a frequency range
+
 ### Fixed
 - **Fixed plugin theming to match exact SDRSharp dark theme specification**: Applied user-specified RGB colors for perfect match
   - Main background: `Color.FromArgb(25, 25, 25)` (very dark gray as specified by user color picker)

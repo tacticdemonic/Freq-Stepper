@@ -90,11 +90,23 @@ namespace FrequencyStepperPlugin
                 // Check if we've reached the end
                 if (_currentFrequencyMHz > _config.EndFrequencyMHz)
                 {
-                    _stepTimer.Stop();
-                    _isRunning = false;
-                    OnStatusChanged("Stepping completed");
-                    OnSteppingCompleted();
-                    return;
+                    if (_config.LoopContinuously)
+                    {
+                        // Reset to start frequency and continue
+                        _currentFrequencyMHz = _config.StartFrequencyMHz;
+                        SetFrequency(_currentFrequencyMHz);
+                        OnStatusChanged($"Looping: Restarted at {_currentFrequencyMHz:F6} MHz");
+                        return;
+                    }
+                    else
+                    {
+                        // Stop stepping
+                        _stepTimer.Stop();
+                        _isRunning = false;
+                        OnStatusChanged("Stepping completed");
+                        OnSteppingCompleted();
+                        return;
+                    }
                 }
 
                 // Set the new frequency
@@ -156,6 +168,7 @@ namespace FrequencyStepperPlugin
         public decimal EndFrequencyMHz { get; set; }
         public decimal StepSizeMHz { get; set; }
         public int StepIntervalMs { get; set; }
+        public bool LoopContinuously { get; set; }
     }
 
     public class FrequencyChangedEventArgs : EventArgs

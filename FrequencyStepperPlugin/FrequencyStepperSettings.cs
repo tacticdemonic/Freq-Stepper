@@ -11,6 +11,7 @@ namespace FrequencyStepperPlugin
         public decimal EndFrequencyMHz { get; set; } = 108.0m;
         public decimal StepSizeMHz { get; set; } = 0.1m;
         public int StepIntervalMs { get; set; } = 1000;
+        public bool LoopContinuously { get; set; } = false;
 
         private static readonly string SettingsFileName = "FrequencyStepperSettings.xml";
         private static readonly string SettingsPath = Path.Combine(
