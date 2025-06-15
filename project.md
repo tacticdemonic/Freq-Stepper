@@ -35,7 +35,8 @@ public interface ISharpPlugin
     void Initialize(ISharpControl control);
     void Close();
     bool HasGui { get; }
-    UserControl GuiControl { get; }
+    UserControl Gui { get; }
+    string DisplayName { get; }
 }
 ```
 
@@ -84,7 +85,7 @@ public interface ISharpPlugin
 ### Modern Deployment (2024)
 
 **Target Framework:**
-* Compile the plugin targeting .NET 5+ (compatible with SDRSharp 1788+)
+* Compile the plugin targeting .NET 9+ (compatible with current SDRSharp builds)
 * Ensure compatibility with current SDRSharp versions (1919, 1920 beta)
 
 **Installation Methods:**

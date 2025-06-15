@@ -16,8 +16,8 @@ A plugin for SDRSharp that automatically steps through frequencies from a user-d
 
 ## Requirements
 
-- SDRSharp version 1788+ (.NET 5 compatible)
-- Windows with .NET 5 Runtime
+- SDRSharp version 1919+ (.NET 9 compatible)
+- Windows with .NET 9 Runtime
 - Compatible SDR hardware (RTL-SDR, Airspy, HackRF, etc.)
 
 ## Build Instructions
@@ -35,7 +35,7 @@ A plugin for SDRSharp that automatically steps through frequencies from a user-d
    ```
 
 3. **Output Location**:
-   - The compiled plugin will be in `FrequencyStepperPlugin/bin/Release/net5.0-windows/`
+   - The compiled plugin will be in `FrequencyStepperPlugin/bin/Release/net9.0-windows/`
 
 ## Installation
 
@@ -108,7 +108,7 @@ The plugin includes validation for common SDR hardware:
 **Plugin Not Loading**:
 - Ensure SDRSharp assemblies are in the `lib` directory during build
 - Check that the plugin DLL is in the correct folder
-- Verify SDRSharp version compatibility (.NET 5+)
+- Verify SDRSharp version compatibility (.NET 9+)
 
 **Frequency Validation Errors**:
 - Check that frequencies are within your SDR's supported range
@@ -123,7 +123,7 @@ The plugin includes validation for common SDR hardware:
 ## Development
 
 Built with:
-- .NET 5 (Windows)
+- .NET 9 (Windows)
 - Windows Forms for UI
 - SDRSharp Plugin API
 

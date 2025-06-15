@@ -39,7 +39,7 @@ if [ $? -eq 0 ]; then
     echo "BUILD SUCCESSFUL!"
     echo "========================================"
     echo
-    echo "Plugin location: FrequencyStepperPlugin/bin/Release/net5.0-windows/FrequencyStepperPlugin.dll"
+    echo "Plugin location: FrequencyStepperPlugin/bin/Release/net9.0-windows/FrequencyStepperPlugin.dll"
     echo
     echo "Installation:"
     echo "1. Copy FrequencyStepperPlugin.dll to your SDRSharp Plugins directory"

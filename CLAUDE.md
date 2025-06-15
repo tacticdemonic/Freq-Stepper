@@ -24,10 +24,10 @@ The plugin follows SDRSharp's standard plugin pattern:
 
 ## Development Requirements
 
-- Target .NET Framework 4.6.1+ for SDRSharp compatibility
+- Target .NET 9+ for current SDRSharp compatibility
 - Output as `.dll` for plugin deployment
 - Windows Forms for GUI components
-- Plugin registration via `Plugins.xml` configuration
+- Plugin registration via `Plugins.xml` configuration or automatic recognition
 
 ## Deployment Structure
 
@@ -41,7 +41,27 @@ The plugin follows SDRSharp's standard plugin pattern:
 
 - Start/End frequency specification in Hz
 - Step size and interval configuration
-- Start/Stop controls for frequency stepping
+- Start/Pause/Resume/Stop controls for frequency stepping
 - Input validation for frequency ranges
 - State preservation between sessions
 - Hardware capability validation against SDR limits
+
+## Build Commands
+
+**Prerequisites:**
+- Place SDRSharp assemblies in `FrequencyStepperPlugin/lib/` directory:
+  - `SDRSharp.Common.dll`
+  - `SDRSharp.Radio.dll` 
+  - `SDRSharp.PanView.dll`
+
+**Build:**
+```bash
+dotnet build FrequencyStepperPlugin.sln --configuration Release
+```
+
+**Build Scripts:**
+- Windows: `build.bat`
+- Linux/macOS: `build.sh`
+
+**Output Location:**
+- `FrequencyStepperPlugin/bin/Release/net9.0-windows/FrequencyStepperPlugin.dll`

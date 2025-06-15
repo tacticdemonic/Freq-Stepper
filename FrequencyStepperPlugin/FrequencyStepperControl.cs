@@ -17,6 +17,7 @@ namespace FrequencyStepperPlugin
         private NumericUpDown _stepSizeNumeric;
         private NumericUpDown _stepIntervalNumeric;
         private Button _startButton;
+        private Button _pauseButton;
         private Button _stopButton;
         private Label _currentFreqLabel;
         private Label _statusLabel;
@@ -39,7 +40,7 @@ namespace FrequencyStepperPlugin
             // Configure control
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Black;
+            BackColor = Color.FromArgb(25, 25, 25);
             ForeColor = Color.White;
             Size = new Size(250, 350);
 
@@ -50,7 +51,7 @@ namespace FrequencyStepperPlugin
                 FlowDirection = FlowDirection.TopDown,
                 WrapContents = false,
                 AutoScroll = true,
-                BackColor = Color.Black,
+                BackColor = Color.FromArgb(25, 25, 25),
                 Padding = new Padding(5)
             };
 
@@ -78,7 +79,7 @@ namespace FrequencyStepperPlugin
                 DecimalPlaces = 6,
                 Value = 88.0m,
                 Width = 200,
-                BackColor = Color.FromArgb(64, 64, 64),
+                BackColor = Color.FromArgb(40, 40, 40),
                 ForeColor = Color.White
             };
 
@@ -96,7 +97,7 @@ namespace FrequencyStepperPlugin
                 DecimalPlaces = 6,
                 Value = 108.0m,
                 Width = 200,
-                BackColor = Color.FromArgb(64, 64, 64),
+                BackColor = Color.FromArgb(40, 40, 40),
                 ForeColor = Color.White
             };
 
@@ -114,7 +115,7 @@ namespace FrequencyStepperPlugin
                 DecimalPlaces = 6,
                 Value = 0.1m,
                 Width = 200,
-                BackColor = Color.FromArgb(64, 64, 64),
+                BackColor = Color.FromArgb(40, 40, 40),
                 ForeColor = Color.White
             };
 
@@ -131,7 +132,7 @@ namespace FrequencyStepperPlugin
                 Maximum = 60000,
                 Value = 1000,
                 Width = 200,
-                BackColor = Color.FromArgb(64, 64, 64),
+                BackColor = Color.FromArgb(40, 40, 40),
                 ForeColor = Color.White
             };
 
@@ -143,8 +144,20 @@ namespace FrequencyStepperPlugin
                 Height = 30,
                 BackColor = Color.FromArgb(0, 120, 0),
                 ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
+                FlatStyle = FlatStyle.Standard,
                 Margin = new Padding(0, 10, 0, 5)
+            };
+
+            _pauseButton = new Button
+            {
+                Text = "Pause",
+                Width = 200,
+                Height = 30,
+                BackColor = Color.FromArgb(120, 120, 0),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Standard,
+                Enabled = false,
+                Margin = new Padding(0, 5, 0, 5)
             };
 
             _stopButton = new Button
@@ -154,7 +167,7 @@ namespace FrequencyStepperPlugin
                 Height = 30,
                 BackColor = Color.FromArgb(120, 0, 0),
                 ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
+                FlatStyle = FlatStyle.Standard,
                 Enabled = false,
                 Margin = new Padding(0, 5, 0, 10)
             };
@@ -187,22 +200,52 @@ namespace FrequencyStepperPlugin
             mainPanel.Controls.Add(stepIntervalLabel);
             mainPanel.Controls.Add(_stepIntervalNumeric);
             mainPanel.Controls.Add(_startButton);
+            mainPanel.Controls.Add(_pauseButton);
             mainPanel.Controls.Add(_stopButton);
             mainPanel.Controls.Add(_currentFreqLabel);
             mainPanel.Controls.Add(_statusLabel);
 
             Controls.Add(mainPanel);
+            
+            // Force color application after controls are added
+            ForceNumericControlColors();
+            
             ResumeLayout(false);
+        }
+
+        private void ForceNumericControlColors()
+        {
+            // Sometimes numeric controls don't respect initial color settings
+            // Force them to use exact RGB colors specified by user
+            _startFreqNumeric.BackColor = Color.FromArgb(40, 40, 40);
+            _startFreqNumeric.ForeColor = Color.White;
+            _endFreqNumeric.BackColor = Color.FromArgb(40, 40, 40);
+            _endFreqNumeric.ForeColor = Color.White;
+            _stepSizeNumeric.BackColor = Color.FromArgb(40, 40, 40);
+            _stepSizeNumeric.ForeColor = Color.White;
+            _stepIntervalNumeric.BackColor = Color.FromArgb(40, 40, 40);
+            _stepIntervalNumeric.ForeColor = Color.White;
+            
+            // Force a refresh
+            _startFreqNumeric.Refresh();
+            _endFreqNumeric.Refresh();
+            _stepSizeNumeric.Refresh();
+            _stepIntervalNumeric.Refresh();
         }
 
         private void SetupEventHandlers()
         {
             _startButton.Click += StartButton_Click;
+            _pauseButton.Click += PauseButton_Click;
             _stopButton.Click += StopButton_Click;
             
             _stepperLogic.FrequencyChanged += OnFrequencyChanged;
             _stepperLogic.SteppingCompleted += OnSteppingCompleted;
             _stepperLogic.StatusChanged += OnStatusChanged;
+            
+            // Force colors when control is loaded
+            this.Load += (s, e) => ForceNumericControlColors();
+            this.VisibleChanged += (s, e) => { if (Visible) ForceNumericControlColors(); };
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -221,6 +264,7 @@ namespace FrequencyStepperPlugin
             _stepperLogic.Start(config);
             
             _startButton.Enabled = false;
+            _pauseButton.Enabled = true;
             _stopButton.Enabled = true;
             EnableControls(false);
             
@@ -232,8 +276,23 @@ namespace FrequencyStepperPlugin
             _stepperLogic.Stop();
             
             _startButton.Enabled = true;
+            _pauseButton.Enabled = false;
             _stopButton.Enabled = false;
             EnableControls(true);
+        }
+
+        private void PauseButton_Click(object sender, EventArgs e)
+        {
+            if (_stepperLogic.IsPaused)
+            {
+                _stepperLogic.Resume();
+                _pauseButton.Text = "Pause";
+            }
+            else
+            {
+                _stepperLogic.Pause();
+                _pauseButton.Text = "Resume";
+            }
         }
 
         private void OnFrequencyChanged(object sender, FrequencyChangedEventArgs e)
@@ -256,6 +315,8 @@ namespace FrequencyStepperPlugin
             }
 
             _startButton.Enabled = true;
+            _pauseButton.Enabled = false;
+            _pauseButton.Text = "Pause";
             _stopButton.Enabled = false;
             EnableControls(true);
         }

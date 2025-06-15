@@ -1,0 +1,42 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+
+# SDRSharp Reference Libraries (not included due to licensing)
+FrequencyStepperPlugin/lib/SDRSharp.Common.dll
+FrequencyStepperPlugin/lib/SDRSharp.Radio.dll
+FrequencyStepperPlugin/lib/SDRSharp.PanView.dll
+
+# User settings and temporary files
+*.tmp
+*.temp
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Plugin settings (user-specific)
+*.xml.user
+
+# Build logs
+*.buildlog

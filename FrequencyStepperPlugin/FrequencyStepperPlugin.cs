@@ -13,7 +13,7 @@ namespace FrequencyStepperPlugin
 
         public bool HasGui => true;
 
-        public UserControl GuiControl => _guiControl;
+        public UserControl Gui => _guiControl;
 
         public void Initialize(ISharpControl control)
         {

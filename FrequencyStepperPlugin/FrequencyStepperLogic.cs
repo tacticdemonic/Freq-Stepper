@@ -11,10 +11,13 @@ namespace FrequencyStepperPlugin
         private FrequencyStepperConfig _config;
         private decimal _currentFrequencyMHz;
         private bool _isRunning;
+        private bool _isPaused;
 
         public event EventHandler<FrequencyChangedEventArgs> FrequencyChanged;
         public event EventHandler SteppingCompleted;
         public event EventHandler<StatusChangedEventArgs> StatusChanged;
+
+        public bool IsPaused => _isPaused;
 
         public FrequencyStepperLogic(ISharpControl control)
         {
@@ -31,6 +34,7 @@ namespace FrequencyStepperPlugin
             _config = config;
             _currentFrequencyMHz = config.StartFrequencyMHz;
             _isRunning = true;
+            _isPaused = false;
 
             // Set initial frequency
             SetFrequency(_currentFrequencyMHz);
@@ -49,8 +53,31 @@ namespace FrequencyStepperPlugin
 
             _stepTimer.Stop();
             _isRunning = false;
+            _isPaused = false;
 
             OnStatusChanged("Stepping stopped");
+        }
+
+        public void Pause()
+        {
+            if (!_isRunning || _isPaused)
+                return;
+
+            _stepTimer.Stop();
+            _isPaused = true;
+
+            OnStatusChanged("Stepping paused");
+        }
+
+        public void Resume()
+        {
+            if (!_isRunning || !_isPaused)
+                return;
+
+            _stepTimer.Start();
+            _isPaused = false;
+
+            OnStatusChanged("Stepping resumed");
         }
 
         private void StepTimer_Tick(object sender, EventArgs e)
