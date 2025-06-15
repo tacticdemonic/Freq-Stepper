@@ -1,132 +1,144 @@
+<!-- File: README.md -->
+
 # SDRSharp Frequency Stepper Plugin
 
-A plugin for SDRSharp that automatically steps through frequencies from a user-defined start to end point at specified intervals.
+## 📡 Purpose
 
-## Features
+I created this plugin because I was manually stepping through frequencies in SDR# (SDRSharp) to scan for signals — which was both inefficient and frustrating. Traditional scanning relies heavily on signal strength, but I prefer to _watch the waterfall visually_ for weak or intermittent signals. This plugin solves that problem by automating the frequency stepping, allowing me to focus on the waterfall without constantly interacting with the tuner.
 
-- **Automatic Frequency Stepping**: Steps through frequencies from start to end point
-- **Configurable Parameters**: 
-  - Start/End frequency (MHz)
-  - Step size (MHz) 
-  - Step interval (milliseconds)
-- **Input Validation**: Ensures logical frequency bounds and hardware compatibility
-- **Settings Persistence**: Saves and loads last-used settings
-- **Hardware Validation**: Validates frequencies against SDR hardware capabilities
-- **Real-time Status**: Shows current frequency and stepping status
+---
 
-## Requirements
+## 🛠 Features
 
-- SDRSharp version 1919+ (.NET 9 compatible)
-- Windows with .NET 9 Runtime
-- Compatible SDR hardware (RTL-SDR, Airspy, HackRF, etc.)
+- Define **start** and **end** frequency in MHz
+- Set **step size** and **step interval** in milliseconds
+- **Start**, **Pause/Resume**, and **Stop** stepping at any time
+- Real-time frequency display
+- Settings are saved between sessions
+- Validates input ranges and hardware capability
 
-## Build Instructions
+---
 
-1. **Install Dependencies**:
-   - Download and install SDRSharp
-   - Copy the following SDRSharp assemblies to `FrequencyStepperPlugin/lib/`:
-     - `SDRSharp.Common.dll`
-     - `SDRSharp.Radio.dll`
-     - `SDRSharp.PanView.dll`
+## 🧭 How It Works
 
-2. **Build the Project**:
+The plugin increments your SDRSharp frequency in real time, based on the specified step size and delay. Unlike traditional signal-based scanning, this provides **visual control over scanning** using the waterfall — ideal for catching subtle or short-lived transmissions.
+
+---
+
+## 🧱 Installation
+
+The plugin is **pre-compiled and included** in this repository — no compilation needed!
+
+1. **Deploy** the plugin:
+   - Copy `FrequencyStepperPlugin.dll` from the repository into your SDRSharp `Plugins` folder
+   - Add to `Plugins.xml`:
+     ```xml
+     <add key="FrequencyStepperPlugin" value="Frequency Stepper Plugin.FrequencyStepperPlugin, FrequencyStepperPlugin" />
+     ```
+
+### 🔨 Compiling from Source (Optional)
+
+If you want to modify and compile the plugin yourself:
+
+1. Place SDRSharp assemblies in `FrequencyStepperPlugin/lib/`:
+   ```
+   SDRSharp.Common.dll  
+   SDRSharp.Radio.dll  
+   SDRSharp.PanView.dll
+   ```
+
+2. Build the project:
    ```bash
    dotnet build FrequencyStepperPlugin.sln --configuration Release
    ```
 
-3. **Output Location**:
-   - The compiled plugin will be in `FrequencyStepperPlugin/bin/Release/net9.0-windows/`
+3. The compiled plugin will be available at `bin/Release/net9.0-windows/FrequencyStepperPlugin.dll`
 
-## Installation
+---
 
-### Method 1: Automatic Recognition (Recommended)
+## 🖥 UI Controls
 
-1. Create a new folder in your SDRSharp `Plugins` directory:
-   ```
-   SDRSharp/Plugins/FrequencyStepperPlugin/
-   ```
+- **Start Stepping** — begins frequency sweep
+- **Pause/Resume** — allows pausing without losing place
+- **Stop Stepping** — halts the sweep and resets state
+- **Settings** — Start, End, Step Size, Interval (persisted)
 
-2. Copy the compiled `FrequencyStepperPlugin.dll` to this folder
+---
 
-3. Restart SDRSharp - the plugin will be automatically recognized
+## ✅ Requirements
 
-### Method 2: Manual Registration
+- **SDRSharp Version**: Compatible with .NET 9-based versions (v1919+)
+- **.NET SDK**: Targeting `.NET 9.0` with Windows Forms support
+- **Hardware Support**: Tested with RTL-SDR and Airspy devices
 
-1. Copy `FrequencyStepperPlugin.dll` to the SDRSharp `Plugins` directory
+---
 
-2. Edit `Plugins.xml` in your SDRSharp directory and add:
-   ```xml
-   <add key="FrequencyStepperPlugin" value="FrequencyStepperPlugin.FrequencyStepperPlugin, FrequencyStepperPlugin" />
-   ```
+## 🔧 Development
 
-3. Restart SDRSharp
+### Project Structure
 
-## Usage
+- `FrequencyStepperPlugin.cs` — plugin entry point
+- `FrequencyStepperControl.cs` — Windows Forms GUI
+- `FrequencyStepperLogic.cs` — logic and frequency control
+- `HardwareValidator.cs` — SDR hardware range checks
+- `FrequencyStepperSettings.cs` — settings persistence
+- `lib/` — contains SDRSharp assembly references (not included)
 
-1. **Start SDRSharp** and ensure your SDR hardware is connected
-2. **Locate the Plugin**: Look for "Frequency Stepper" in the plugin panel
-3. **Configure Parameters**:
-   - **Start Frequency**: Beginning frequency in MHz
-   - **End Frequency**: Ending frequency in MHz  
-   - **Step Size**: Frequency increment in MHz
-   - **Step Interval**: Time between steps in milliseconds
-4. **Start Stepping**: Click "Start Stepping" to begin
-5. **Monitor Progress**: Watch the current frequency and status displays
-6. **Stop Anytime**: Click "Stop Stepping" to halt the process
+### Build Instructions
 
-## Example Usage
-
-**FM Band Scan**:
-- Start Frequency: 88.0 MHz
-- End Frequency: 108.0 MHz
-- Step Size: 0.1 MHz
-- Step Interval: 1000 ms (1 second)
-
-**VHF Aircraft Band**:
-- Start Frequency: 118.0 MHz
-- End Frequency: 137.0 MHz
-- Step Size: 0.025 MHz
-- Step Interval: 500 ms
-
-## Settings
-
-Settings are automatically saved to:
-```
-%APPDATA%/SDRSharp/Plugins/FrequencyStepperSettings.xml
+```bash
+dotnet build FrequencyStepperPlugin.sln --configuration Release
 ```
 
-## Hardware Compatibility
+### Output
 
-The plugin includes validation for common SDR hardware:
-- **RTL-SDR**: 24 MHz - 1.766 GHz
-- **Airspy**: 24 MHz - 1.8 GHz  
-- **HackRF**: 1 MHz - 6 GHz
-- **Generic SDR**: 1 MHz - 2 GHz (conservative)
+```
+bin/Release/net9.0-windows/FrequencyStepperPlugin.dll
+```
 
-## Troubleshooting
+---
 
-**Plugin Not Loading**:
-- Ensure SDRSharp assemblies are in the `lib` directory during build
-- Check that the plugin DLL is in the correct folder
-- Verify SDRSharp version compatibility (.NET 9+)
+## 📓 Example Use Case
 
-**Frequency Validation Errors**:
-- Check that frequencies are within your SDR's supported range
-- Ensure start frequency is less than end frequency
-- Verify step size is reasonable for the frequency range
+> "I want to scan 144 MHz to 146 MHz in 12.5 kHz steps, watching the waterfall for weak SSB signals."
 
-**Performance Issues**:
-- Increase step interval if frequency changes are too fast
-- Reduce step size for more precise scanning
-- Ensure your SDR hardware can handle the specified parameters
+- **Start**: 144.000000
+- **End**: 146.000000
+- **Step Size**: 0.012500
+- **Interval**: 500 ms
 
-## Development
+Start the plugin and observe — you'll see each segment of the band automatically displayed on the waterfall.
 
-Built with:
-- .NET 9 (Windows)
-- Windows Forms for UI
-- SDRSharp Plugin API
+---
 
-## License
+## 📦 Changelog
 
-This project is provided as-is for educational and amateur radio use.
+See [CHANGELOG.md](./CHANGELOG.md) for release notes.
+
+---
+
+## 🤝 Contributing
+
+This plugin was built for personal use, but feel free to fork, modify, or open issues if you'd like to expand it — future ideas include:
+
+- Frequency bookmarking
+- Peak detection
+- Logging
+- Bidirectional scanning
+- Plugin chaining
+
+---
+
+## 📬 Contact
+
+Feel free to open a GitHub issue or submit a pull request if you'd like to contribute.
+
+---
+
+## 🧠 Credits
+
+- Built with ❤️ and C#  
+- Inspired by the need for **visual-first scanning**  
+- Powered by SDRSharp and .NET
+
+---
