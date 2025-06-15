@@ -2,7 +2,7 @@
 
 All notable changes to the Frequency Stepper Plugin project will be documented in this file.
 
-## [Unreleased] - 2024-12-28
+## v0.0.4 - 15-06-2025
 
 ### Added
 - **Pause/Resume Functionality**: Added pause button between Start and Stop buttons
